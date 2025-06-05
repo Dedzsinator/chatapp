@@ -1,0 +1,75 @@
+# Multi-stage build for Elixir/Phoenix backend
+FROM elixir:1.15-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache \
+    build-base \
+    git \
+    nodejs \
+    npm
+
+# Set build ENV
+ENV MIX_ENV=prod
+
+# Install hex and rebar
+RUN mix local.hex --force && \
+    mix local.rebar --force
+
+# Create app directory
+WORKDIR /app
+
+# Copy mix files
+COPY mix.exs mix.lock ./
+
+# Install mix dependencies
+RUN mix deps.get --only $MIX_ENV
+RUN mkdir config
+
+# Copy config files
+COPY config/config.exs config/
+COPY config/prod.exs config/
+
+# Copy the rest of the application
+COPY . .
+
+# Compile the release
+RUN mix deps.compile
+RUN mix compile
+
+# Build the release
+RUN mix release
+
+# Start a new stage for runtime
+FROM alpine:3.18 AS runtime
+
+# Install runtime dependencies
+RUN apk add --no-cache \
+    openssl \
+    ncurses-libs \
+    libstdc++
+
+# Create app user
+RUN adduser -D -h /app -s /bin/sh app
+
+# Create app directory
+WORKDIR /app
+
+# Copy the release from builder stage
+COPY --from=builder --chown=app:app /app/_build/prod/rel/real_chat .
+
+# Switch to app user
+USER app
+
+# Expose port
+EXPOSE 4000
+
+# Set environment
+ENV MIX_ENV=prod
+ENV PORT=4000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:4000/health || exit 1
+
+# Start the application
+CMD ["./bin/real_chat", "start"]

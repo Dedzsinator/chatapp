@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: realchat
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: realchat-secrets
+  namespace: realchat
+type: Opaque
+data:
+  postgres-password: cG9zdGdyZXMK # base64 encoded "postgres"
+  guardian-secret: eW91ci1ndWFyZGlhbi1zZWNyZXQta2V5LWhlcmUK # base64 encoded
+  redis-password: cmVkaXNwYXNzd29yZAo= # base64 encoded "redispassword"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: realchat-config
+  namespace: realchat
+data:
+  POSTGRES_DB: "realchat_prod"
+  POSTGRES_USER: "postgres"
+  SCYLLA_CONTACT_POINTS: "scylla-service:9042"
+  REDIS_URL: "redis://redis-service:6379"
+  MIX_ENV: "prod"
+  PORT: "4000"

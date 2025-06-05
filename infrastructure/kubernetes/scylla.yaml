@@ -1,0 +1,86 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: scylla
+  namespace: realchat
+spec:
+  serviceName: scylla-service
+  replicas: 3
+  selector:
+    matchLabels:
+      app: scylla
+  template:
+    metadata:
+      labels:
+        app: scylla
+    spec:
+      containers:
+        - name: scylla
+          image: scylladb/scylla:5.2
+          command:
+            - /docker-entrypoint.py
+            - --smp
+            - "1"
+            - --memory
+            - "2G"
+            - --overprovisioned
+            - "1"
+            - --api-address
+            - "0.0.0.0"
+            - --seeds
+            - "scylla-0.scylla-service.realchat.svc.cluster.local"
+          ports:
+            - containerPort: 9042
+            - containerPort: 9160
+            - containerPort: 10000
+          volumeMounts:
+            - name: scylla-data
+              mountPath: /var/lib/scylla
+          readinessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -c
+                - "nodetool status"
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          livenessProbe:
+            exec:
+              command:
+                - /bin/bash
+                - -c
+                - "nodetool status"
+            initialDelaySeconds: 60
+            periodSeconds: 30
+          resources:
+            requests:
+              memory: "2Gi"
+              cpu: "1"
+            limits:
+              memory: "4Gi"
+              cpu: "2"
+  volumeClaimTemplates:
+    - metadata:
+        name: scylla-data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 50Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: scylla-service
+  namespace: realchat
+spec:
+  selector:
+    app: scylla
+  ports:
+    - name: cql
+      port: 9042
+      targetPort: 9042
+    - name: thrift
+      port: 9160
+      targetPort: 9160
+  clusterIP: None
