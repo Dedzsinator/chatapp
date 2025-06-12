@@ -1,72 +1,50 @@
-# RealChat Frontend
+# Welcome to your Expo app 👋
 
-Cross-platform messaging app built with React Native + Expo.
+This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
-## Platforms Supported
-- 📱 iOS (native)
-- 🤖 Android (native) 
-- 🌐 Web (react-native-web)
-- 🖥️ Desktop (Electron)
+## Get started
 
-## Tech Stack
-- **React Native** with Expo SDK
-- **TypeScript** for type safety
-- **React Navigation** for routing
-- **Zustand** for state management
-- **React Query** for server state
-- **WebSocket** for real-time communication
-- **React Native Reanimated** for animations
-- **Expo Vector Icons** for icons
+1. Install dependencies
 
-## Setup
+   ```bash
+   npm install
+   ```
 
-### Prerequisites
-- Node.js 18+
-- Expo CLI: `npm install -g @expo/cli`
-- For iOS: Xcode
-- For Android: Android Studio
+2. Start the app
 
-### Installation
+   ```bash
+   npx expo start
+   ```
+
+In the output, you'll find options to open the app in a
+
+- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
+- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
+- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
+- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+
+You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+
+## Get a fresh project
+
+When you're ready, run:
+
 ```bash
-npm install
+npm run reset-project
 ```
 
-### Development
-```bash
-# Web
-npm run web
+This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
-# iOS Simulator
-npm run ios
+## Learn more
 
-# Android Emulator  
-npm run android
+To learn more about developing your project with Expo, look at the following resources:
 
-# Desktop (Electron)
-npm run electron
-```
+- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
+- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
-## Architecture
+## Join the community
 
-### State Management
-- **Zustand stores** for app state
-- **React Query** for server state caching
-- **WebSocket manager** for real-time updates
+Join our community of developers creating universal apps.
 
-### Features
-- 🔐 JWT authentication
-- 💬 Real-time messaging
-- 👥 Group chats
-- 🟢 Presence indicators
-- ✅ Message delivery receipts
-- 🔍 Message search
-- 📱 Push notifications
-- 🎨 Dark/light themes
-- 🌍 Offline support
-
-### Performance Optimizations
-- Message virtualization for large chats
-- Image lazy loading and caching
-- Optimistic UI updates
-- Message deduplication
-- Connection resilience
+- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
+- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.

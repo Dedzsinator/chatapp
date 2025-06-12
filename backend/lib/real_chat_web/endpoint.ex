@@ -11,15 +11,20 @@ defmodule RealChatWeb.Endpoint do
   use Plug.Router
   require Logger
 
-  plug Plug.Logger
-  plug CORSPlug, origin: &__MODULE__.cors_origins/0
-  plug Plug.Parsers,
+  plug(Plug.Logger)
+
+  plug(CORSPlug,
+    origin: ["http://localhost:19006", "http://localhost:3000", "http://localhost:8081"]
+  )
+
+  plug(Plug.Parsers,
     parsers: [:json],
     pass: ["application/json"],
     json_decoder: Jason
+  )
 
-  plug :match
-  plug :dispatch
+  plug(:match)
+  plug(:dispatch)
 
   # WebSocket upgrade
   get "/ws" do
@@ -56,10 +61,10 @@ defmodule RealChatWeb.Endpoint do
   end
 
   # API Routes
-  forward "/api/auth", to: RealChatWeb.AuthController
-  forward "/api/users", to: RealChatWeb.UserController
-  forward "/api/chats", to: RealChatWeb.ChatController
-  forward "/api/messages", to: RealChatWeb.MessageController
+  forward("/api/auth", to: RealChatWeb.AuthController)
+  forward("/api/users", to: RealChatWeb.UserController)
+  forward("/api/chats", to: RealChatWeb.ChatController)
+  forward("/api/messages", to: RealChatWeb.MessageController)
 
   # Catch-all
   match _ do
@@ -81,18 +86,21 @@ defmodule RealChatWeb.Endpoint do
   def start_link do
     port = Application.get_env(:real_chat, :port, 4000)
 
-    dispatch = :cowboy_router.compile([
-      {:_, [
-        {"/ws", RealChatWeb.UserSocket, []},
-        {:_, Plug.Cowboy.Handler, {__MODULE__, []}}
-      ]}
-    ])
+    dispatch =
+      :cowboy_router.compile([
+        {:_,
+         [
+           {"/ws", RealChatWeb.UserSocket, []},
+           {:_, Plug.Cowboy.Handler, {__MODULE__, []}}
+         ]}
+      ])
 
-    {:ok, _} = :cowboy.start_clear(
-      :http,
-      [{:port, port}],
-      %{env: %{dispatch: dispatch}}
-    )
+    {:ok, _} =
+      :cowboy.start_clear(
+        :http,
+        [{:port, port}],
+        %{env: %{dispatch: dispatch}}
+      )
 
     Logger.info("RealChatWeb.Endpoint started on port #{port}")
     {:ok, self()}
@@ -112,10 +120,14 @@ defmodule RealChatWeb.Endpoint do
 
   defp cors_origins do
     Application.get_env(:real_chat, :cors_origins, [
-      "http://localhost:3000",   # React dev server
-      "http://localhost:19006",  # Expo web
-      "capacitor://localhost",   # Capacitor
-      "ionic://localhost"        # Ionic
+      # React dev server
+      "http://localhost:3000",
+      # Expo web
+      "http://localhost:19006",
+      # Capacitor
+      "capacitor://localhost",
+      # Ionic
+      "ionic://localhost"
     ])
   end
 

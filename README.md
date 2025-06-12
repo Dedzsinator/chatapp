@@ -80,6 +80,19 @@ npm run android  # Android
 npm run electron # Desktop
 ```
 
+### start postgres
+```bash
+sudo systemctl start postgresql
+```
+
+## Dependencies
+- **Backend**: 
+  - Elixir 1.14+
+  - ScyllaDB
+  - Redis
+  - PostgreSQL
+  - Qdrant (optional)
+
 ## Development
 
 See individual README files in backend/ and frontend/ directories for detailed setup instructions.

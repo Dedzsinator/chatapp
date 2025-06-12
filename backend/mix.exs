@@ -45,7 +45,7 @@ defmodule RealChat.MixProject do
       {:xandra, "~> 0.16"},
 
       # ClickHouse for ultra-high-performance analytics
-      {:httpoison, "~> 2.0"},
+      {:httpoison, "~> 1.8"},
       {:clickhousex, "~> 0.5"},
 
       # Redis
@@ -54,6 +54,12 @@ defmodule RealChat.MixProject do
       # PubSub for clustering
       {:phoenix_pubsub, "~> 2.1"},
 
+      # Phoenix components needed for web interface
+      {:phoenix, "~> 1.7"},
+      {:phoenix_html, "~> 4.0"},
+      {:phoenix_html_helpers, "~> 1.0"},
+      {:gettext, "~> 0.24"},
+
       # Authentication
       {:guardian, "~> 2.3"},
       {:comeonin, "~> 5.3"},
@@ -61,9 +67,6 @@ defmodule RealChat.MixProject do
 
       # UUID generation
       {:ecto_ulid, "~> 0.3"},
-
-      # Validation
-      {:ecto_commons, "~> 0.3"},
 
       # Push notifications
       {:web_push_encryption, "~> 0.3"},
@@ -74,6 +77,7 @@ defmodule RealChat.MixProject do
       # Performance monitoring
       {:telemetry, "~> 1.2"},
       {:telemetry_metrics, "~> 0.6"},
+      {:telemetry_poller, "~> 1.0"},
 
       # Development and testing
       {:dialyxir, "~> 1.3", only: [:dev], runtime: false},

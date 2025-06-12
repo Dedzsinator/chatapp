@@ -21,9 +21,9 @@ defmodule RealChatWeb.HealthController do
       status: overall_status,
       timestamp: DateTime.utc_now(),
       services: %{
-        postgres: if postgres_status, do: "healthy", else: "unhealthy",
-        scylla: if scylla_status, do: "healthy", else: "unhealthy",
-        redis: if redis_status, do: "healthy", else: "unhealthy"
+        postgres: if(postgres_status, do: "healthy", else: "unhealthy"),
+        scylla: if(scylla_status, do: "healthy", else: "unhealthy"),
+        redis: if(redis_status, do: "healthy", else: "unhealthy")
       }
     })
   end

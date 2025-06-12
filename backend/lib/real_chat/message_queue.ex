@@ -54,7 +54,7 @@ defmodule RealChat.MessageQueue do
   @impl true
   def init(_opts) do
     state = %__MODULE__{
-      queue: :priority_queue.new(),
+      queue: :queue.new(),
       in_flight: %{},
       retry_queue: :queue.new(),
       message_ids: MapSet.new()
@@ -75,13 +75,13 @@ defmodule RealChat.MessageQueue do
       {:reply, {:error, :duplicate_message}, state}
     else
       # Check queue size for backpressure
-      queue_size = :priority_queue.size(state.queue)
+      queue_size = :queue.len(state.queue)
       if queue_size >= @max_queue_size do
         {:reply, {:error, :queue_full}, state}
       else
         # Add to queue with priority (lower number = higher priority)
         priority = calculate_priority(message)
-        queue = :priority_queue.in({priority, message}, state.queue)
+        queue = :queue.in(message, state.queue)
         message_ids = MapSet.put(state.message_ids, message.id)
 
         new_state = %{state | queue: queue, message_ids: message_ids}
@@ -97,7 +97,7 @@ defmodule RealChat.MessageQueue do
   @impl true
   def handle_call(:get_stats, _from, state) do
     stats = %{
-      queue_size: :priority_queue.size(state.queue),
+      queue_size: :queue.len(state.queue),
       in_flight_count: map_size(state.in_flight),
       retry_queue_size: :queue.len(state.retry_queue),
       processed_messages: MapSet.size(state.message_ids)
@@ -155,7 +155,7 @@ defmodule RealChat.MessageQueue do
           if attempts < @retry_attempts do
             retry_message = Map.put(message, :attempts, attempts + 1)
             retry_queue = :queue.in(retry_message, state.retry_queue)
-            Logger.warn("Message #{message_id} delivery failed: #{inspect(reason)}, retrying (attempt #{attempts + 1})")
+            Logger.warning("Message #{message_id} delivery failed: #{inspect(reason)}, retrying (attempt #{attempts + 1})")
             %{state | in_flight: in_flight, retry_queue: retry_queue}
           else
             Logger.error("Message #{message_id} delivery failed permanently: #{inspect(reason)}")
@@ -171,8 +171,8 @@ defmodule RealChat.MessageQueue do
   ## Private Functions
 
   defp process_messages(state) do
-    case :priority_queue.out(state.queue) do
-      {{_priority, message}, new_queue} ->
+    case :queue.out(state.queue) do
+      {{:value, message}, new_queue} ->
         # Move to in-flight and start delivery
         in_flight = Map.put(state.in_flight, message.id, message)
 
@@ -181,7 +181,7 @@ defmodule RealChat.MessageQueue do
 
         %{state | queue: new_queue, in_flight: in_flight}
 
-      :empty ->
+      {:empty, _} ->
         state
     end
   end
@@ -191,7 +191,7 @@ defmodule RealChat.MessageQueue do
       {{:value, message}, new_retry_queue} ->
         # Add back to main queue
         priority = calculate_priority(message)
-        queue = :priority_queue.in({priority, message}, state.queue)
+        queue = :queue.in(message, state.queue)
 
         %{state | retry_queue: new_retry_queue, queue: queue}
 
@@ -259,7 +259,7 @@ defmodule RealChat.MessageQueue do
     end
   end
 
-  defp get_chat_participants(chat_id) do
+  defp get_chat_participants(_chat_id) do
     # TODO: Implement chat participant lookup
     # For now, return empty list
     []

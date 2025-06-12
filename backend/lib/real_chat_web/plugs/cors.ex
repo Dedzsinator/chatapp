@@ -1,5 +1,6 @@
 defmodule RealChatWeb.Plugs.CORS do
   @behaviour Plug
+  import Plug.Conn
 
   def init(opts), do: opts
 

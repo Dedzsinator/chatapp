@@ -30,9 +30,6 @@ defmodule RealChat.Application do
       # Message queue for delivery guarantees
       RealChat.MessageQueue,
 
-      # AI services (optional)
-      RealChat.AI.SmartReplyService,
-
       # Web endpoint (Cowboy)
       RealChatWeb.Endpoint,
 

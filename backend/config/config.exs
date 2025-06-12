@@ -1,5 +1,8 @@
 import Config
 
+# Configure Ecto repositories
+config :real_chat, ecto_repos: [RealChat.Repo]
+
 # Configure your database
 config :real_chat, RealChat.Repo,
   username: System.get_env("DB_USERNAME", "postgres"),
@@ -57,24 +60,23 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id, :user_id]
 
-# Configure telemetry
-config :real_chat, RealChatWeb.Telemetry,
-  metrics: [
-    # WebSocket metrics
-    counter("real_chat.websocket.connections.total"),
-    counter("real_chat.websocket.messages.total"),
+# Configure telemetry metrics
+config :real_chat, :telemetry_metrics, [
+  # WebSocket metrics
+  {:counter, "real_chat.websocket.connections.total"},
+  {:counter, "real_chat.websocket.messages.total"},
 
-    # Message queue metrics
-    last_value("real_chat.message_queue.size"),
-    counter("real_chat.messages.sent.total"),
-    counter("real_chat.messages.delivered.total"),
+  # Message queue metrics
+  {:last_value, "real_chat.message_queue.size"},
+  {:counter, "real_chat.messages.sent.total"},
+  {:counter, "real_chat.messages.delivered.total"},
 
-    # Database metrics
-    summary("real_chat.database.query.duration", unit: {:native, :millisecond}),
+  # Database metrics
+  {:summary, "real_chat.database.query.duration", [unit: {:native, :millisecond}]},
 
-    # HTTP metrics
-    summary("real_chat.http.request.duration", unit: {:native, :millisecond})
-  ]
+  # HTTP metrics
+  {:summary, "real_chat.http.request.duration", [unit: {:native, :millisecond}]}
+]
 
 # AI Features (optional)
 config :real_chat, :ai_features,

@@ -1,0 +1,25 @@
+[0;1;32m●[0m postgresql.service - PostgreSQL database server
+     Loaded: loaded (]8;;file://asus/usr/lib/systemd/system/postgresql.service\/usr/lib/systemd/system/postgresql.service]8;;\; [0;1;32menabled[0m; preset: [0;1;38:5:185mdisabled[0m)
+     Active: [0;1;32mactive (running)[0m since Thu 2025-06-12 02:08:27 EEST; 16s ago
+ Invocation: cbea18680b3f4676afe1a8185fa07565
+       Docs: ]8;;man:postgres(1)\man:postgres(1)]8;;\
+   Main PID: 85798 (postgres)
+      Tasks: 6[0;38;5;245m (limit: 18115)[0m
+     Memory: 17.7M (peak: 18.8M)
+        CPU: 88ms
+     CGroup: /system.slice/postgresql.service
+             ├─[0;38;5;245m85798 /usr/bin/postgres -D /var/lib/postgres/data[0m
+             ├─[0;38;5;245m85800 "postgres: checkpointer "[0m
+             ├─[0;38;5;245m85801 "postgres: background writer "[0m
+             ├─[0;38;5;245m85803 "postgres: walwriter "[0m
+             ├─[0;38;5;245m85804 "postgres: autovacuum launcher "[0m
+             └─[0;38;5;245m85805 "postgres: logical replication launcher "[0m
+
+Jun 12 02:08:27 asus systemd[1]: Starting PostgreSQL database server...
+Jun 12 02:08:27 asus postgres[85798]: 2025-06-12 02:08:27.184 EEST [85798] LOG:  starting PostgreSQL 17.5 on x86_64-pc-linux-gnu, compiled by gcc (GCC) 15.1.1 20250425, 64-bit
+Jun 12 02:08:27 asus postgres[85798]: 2025-06-12 02:08:27.185 EEST [85798] LOG:  listening on IPv6 address "::1", port 5432
+Jun 12 02:08:27 asus postgres[85798]: 2025-06-12 02:08:27.185 EEST [85798] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+Jun 12 02:08:27 asus postgres[85798]: 2025-06-12 02:08:27.186 EEST [85798] LOG:  listening on Unix socket "/run/postgresql/.s.PGSQL.5432"
+Jun 12 02:08:27 asus postgres[85802]: 2025-06-12 02:08:27.188 EEST [85802] LOG:  database system was shut down at 2025-06-12 02:07:11 EEST
+Jun 12 02:08:27 asus postgres[85798]: 2025-06-12 02:08:27.192 EEST [85798] LOG:  database system is ready to accept connections
+Jun 12 02:08:27 asus systemd[1]: Started PostgreSQL database server.
